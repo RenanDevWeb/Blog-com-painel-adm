@@ -10,11 +10,13 @@ const conection = require('./database/connection')
 // models databse
 const Article = require('./articles/Article')
 const Category = require('./categories/Category')
+const User = require('./user/User')
 
 
 // routes
 const CategoriesControler = require('./categories/CategoriesController')
 const ArticlesControler = require('./articles/ArticlesController')
+const UsersControler = require('./user/UserController')
 
 // view engine
 app.set('view engine', 'ejs')
@@ -38,6 +40,7 @@ conection.authenticate()
 // routes
 app.use('/', CategoriesControler)
 app.use('/', ArticlesControler)
+app.use('/', UsersControler)
 
 
 app.get('/', (req,res) => {
