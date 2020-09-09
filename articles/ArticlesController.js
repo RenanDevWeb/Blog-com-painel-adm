@@ -41,7 +41,46 @@ router.get('/admin/articles/edit/:id', (req,res) => {
     }).catch(err => res.redirect('/admin/articles'))
     })
 
+router.get('/articles/page/:num',(req,res) => {
+    let  page = req.params.num
+    let  offset = 0
+    const elementsInPage = 2
+    const limit = 4
+        if(isNaN(page) || page == 1){
+        offset = 0
+    }else{
+        offset = parseInt(page)  * elementsInPage
+     }
 
+    Article.findAndCountAll({
+        limit: limit,
+        offset: offset,
+        order: [
+            ['id','DESC']
+        ]
+    }).then(articles => {
+        let next;
+        if(offset * elementsInPage >= articles.count){
+            next = false
+        } else{
+            next = true
+        }
+        let result = {
+            page: parseInt(page),
+            next: next,
+            articles: articles,
+        }
+
+        Category.findAll().then(categories => {
+            res.render('admin/articles/page', {
+                result: result,
+                categories: categories
+            })
+        })
+       
+    })
+
+})
 
 router.post('/admin/articles/save', (req,res) => {
     const title = req.body.title
