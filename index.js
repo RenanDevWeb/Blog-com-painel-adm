@@ -1,8 +1,8 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const { static } = require('express')
+const session = require('express-session')
 const app = express()
-
 
 // imports from databse
 const conection = require('./database/connection')
@@ -20,6 +20,17 @@ const UsersControler = require('./user/UserController')
 
 // view engine
 app.set('view engine', 'ejs')
+
+
+
+//gereciamento de sessoes
+app.use(session({
+    secret: "renansalmazio",
+    cookie: {maxAge: 30000000 }
+}))
+
+
+
 
 //body parser
 app.use(bodyParser.urlencoded({extended: false}))
@@ -41,6 +52,9 @@ conection.authenticate()
 app.use('/', CategoriesControler)
 app.use('/', ArticlesControler)
 app.use('/', UsersControler)
+
+//Redis para sessions baseado em outra storage sem momoria
+
 
 
 app.get('/', (req,res) => {
